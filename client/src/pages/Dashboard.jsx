@@ -159,124 +159,180 @@ function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="border-b bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">
-              Job Application Tracker
-            </h1>
+  <div className="min-h-screen bg-slate-100">
+    {/* Header */}
+    <header className="border-b border-slate-200 bg-white/90 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-slate-900">
+            Job Application Tracker
+          </h1>
 
-            <p className="text-sm text-gray-500">
-              Keep track of your job search
-            </p>
-          </div>
-
-<div className="flex items-center gap-3">
-  <span className="text-sm text-gray-600">
-    {user?.name}
-  </span>
-
-  <button
-    onClick={() => navigate("/settings")}
-    className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-  >
-    Settings
-  </button>
-
-  <button
-    onClick={handleLogout}
-    className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-  >
-    Log out
-  </button>
-</div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        {/* Page heading */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">
-            Dashboard
-          </h2>
-
-          <p className="mt-1 text-gray-500">
-            Overview of your job applications.
+          <p className="mt-0.5 text-sm text-slate-500">
+            Keep your job search organized.
           </p>
         </div>
 
-        {/* Error */}
-        {error && (
-          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </div>
-        )}
-
-        {/* Stats */}
-        <section className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border bg-white p-6 shadow-sm">
-            <p className="text-sm font-medium text-gray-500">
-              Total Applications
+        <div className="flex items-center gap-3">
+          <div className="hidden text-right sm:block">
+            <p className="text-sm font-semibold text-slate-800">
+              {user?.name}
             </p>
 
-            <p className="mt-2 text-3xl font-bold text-gray-900">
-              {totalApplications}
+            <p className="text-xs text-slate-500">
+              Job seeker
             </p>
           </div>
 
-          <div className="rounded-xl border bg-white p-6 shadow-sm">
-            <p className="text-sm font-medium text-gray-500">
-              Interviews
-            </p>
-
-            <p className="mt-2 text-3xl font-bold text-yellow-600">
-              {interviews}
-            </p>
-          </div>
-
-          <div className="rounded-xl border bg-white p-6 shadow-sm">
-            <p className="text-sm font-medium text-gray-500">
-              Offers
-            </p>
-
-            <p className="mt-2 text-3xl font-bold text-green-600">
-              {offers}
-            </p>
-          </div>
-
-          <div className="rounded-xl border bg-white p-6 shadow-sm">
-            <p className="text-sm font-medium text-gray-500">
-              Rejections
-            </p>
-
-            <p className="mt-2 text-3xl font-bold text-red-600">
-              {rejections}
-            </p>
-          </div>
-        </section>
-
-        {/* Add application */}
-          <div className="mb-8 flex justify-end">
-            <button
-            onClick={() => setShowAddForm(true)}
-            className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700"
+          <button
+            onClick={() => navigate("/settings")}
+            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
           >
-    + Add Application
-  </button>
-</div>
+            Settings
+          </button>
 
-        {/* Applications */}
-        <section className="rounded-xl border bg-white shadow-sm">
-          <div className="border-b px-6 py-5">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Your Applications
-            </h2>
+          <button
+            onClick={handleLogout}
+            className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800"
+          >
+            Log out
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main className="mx-auto max-w-7xl px-6 py-10">
+      {/* Page heading */}
+      <div className="mb-10">
+        <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-blue-600">
+          Your job search
+        </p>
+
+        <h2 className="text-4xl font-bold tracking-tight text-slate-900">
+          Dashboard
+        </h2>
+
+        <p className="mt-2 max-w-2xl text-slate-500">
+          Keep track of your applications, follow your progress,
+          and stay on top of every opportunity.
+        </p>
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {/* Stats */}
+      <section className="mb-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Total Applications */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500">
+                Total Applications
+              </p>
+
+              <p className="mt-3 text-4xl font-bold tracking-tight text-slate-900">
+                {totalApplications}
+              </p>
+            </div>
+
           </div>
 
-          {/* Filters */}
-          <div className="grid gap-4 border-b bg-gray-50 px-6 py-4 md:grid-cols-3">
+          <p className="mt-4 text-xs font-medium text-slate-400">
+            All applications in your tracker
+          </p>
+        </div>
+
+        {/* Interviews */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500">
+                Interviews
+              </p>
+
+              <p className="mt-3 text-4xl font-bold tracking-tight text-amber-600">
+                {interviews}
+              </p>
+            </div>
+
+          </div>
+
+          <p className="mt-4 text-xs font-medium text-slate-400">
+            Applications reaching the interview stage
+          </p>
+        </div>
+
+        {/* Offers */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500">
+                Offers
+              </p>
+
+              <p className="mt-3 text-4xl font-bold tracking-tight text-emerald-600">
+                {offers}
+              </p>
+            </div>
+
+          </div>
+
+          <p className="mt-4 text-xs font-medium text-slate-400">
+            Offers received
+          </p>
+        </div>
+
+        {/* Rejections */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500">
+                Rejections
+              </p>
+
+              <p className="mt-3 text-4xl font-bold tracking-tight text-rose-600">
+                {rejections}
+              </p>
+            </div>
+
+          </div>
+
+          <p className="mt-4 text-xs font-medium text-slate-400">
+            Applications that didn't work out
+          </p>
+        </div>
+      </section>
+
+      {/* Applications heading + Add button */}
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold text-slate-900">
+            Applications
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Track and manage your opportunities.
+          </p>
+        </div>
+
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/25"
+        >
+          + Add Application
+        </button>
+      </div>
+
+      {/* Applications */}
+      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        {/* Filters */}
+        <div className="border-b border-slate-200 bg-slate-50/70 px-6 py-5">
+          <div className="grid gap-4 md:grid-cols-3">
             <input
               type="text"
               placeholder="Search applications..."
@@ -284,7 +340,7 @@ function Dashboard() {
               onChange={(event) =>
                 setSearchTerm(event.target.value)
               }
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
             />
 
             <select
@@ -292,7 +348,7 @@ function Dashboard() {
               onChange={(event) =>
                 setStatusFilter(event.target.value)
               }
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
             >
               <option value="All">All Statuses</option>
               <option value="Saved">Saved</option>
@@ -309,232 +365,224 @@ function Dashboard() {
               onChange={(event) =>
                 setSortBy(event.target.value)
               }
-              className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
               <option value="company">Company (A-Z)</option>
             </select>
           </div>
+        </div>
 
-          {/* Application list */}
-          <div className="divide-y">
-            {applications.length === 0 ? (
-              <div className="px-6 py-12 text-center">
-                <p className="text-gray-500">
-                  You don't have any applications yet.
-                </p>
+        {/* Application list */}
+        <div className="divide-y divide-slate-100">
+          {applications.length === 0 ? (
+            <div className="px-6 py-16 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl">
+                📋
               </div>
-            ) : filteredApplications.length === 0 ? (
-              <div className="px-6 py-12 text-center">
-                <p className="text-gray-500">
-                  No applications match your search or filter.
-                </p>
+
+              <p className="font-medium text-slate-700">
+                You don't have any applications yet.
+              </p>
+
+              <p className="mt-1 text-sm text-slate-400">
+                Add your first application to get started.
+              </p>
+            </div>
+          ) : filteredApplications.length === 0 ? (
+            <div className="px-6 py-16 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl">
+                🔎
               </div>
-            ) : (
-              filteredApplications.map((application) => (
-                <div
-                  key={application._id}
-                  className="p-6"
-                >
-                  {editingId === application._id ? (
-                    <EditApplicationForm
-                      application={application}
-                      onApplicationUpdated={
-                        handleApplicationUpdated
-                      }
-                      onCancel={() => setEditingId(null)}
-                    />
-                  ) : (
-<div className="flex flex-col gap-5">
-  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-    <div>
-      <div className="flex flex-wrap items-center gap-3">
-        <h3 className="text-lg font-semibold text-gray-900">
-          {application.jobTitle}
-        </h3>
 
-        <span
-          className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusClasses(
-            application.status
-          )}`}
-        >
-          {application.status}
-        </span>
-      </div>
+              <p className="font-medium text-slate-700">
+                No applications found
+              </p>
 
-      <p className="mt-1 font-medium text-gray-700">
-        {application.company}
-      </p>
+              <p className="mt-1 text-sm text-slate-400">
+                Try changing your search or filter.
+              </p>
+            </div>
+          ) : (
+            filteredApplications.map((application) => (
+              <div
+                key={application._id}
+                className="p-6 transition hover:bg-slate-50/60"
+              >
+                {editingId === application._id ? (
+                  <EditApplicationForm
+                    application={application}
+                    onApplicationUpdated={
+                      handleApplicationUpdated
+                    }
+                    onCancel={() => setEditingId(null)}
+                  />
+                ) : (
+                  <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <h3 className="text-lg font-bold text-slate-900">
+                            {application.jobTitle}
+                          </h3>
 
-      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
-        <span>
-          📍 {application.location || "Location not specified"}
-        </span>
+                          <span
+                            className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusClasses(
+                              application.status
+                            )}`}
+                          >
+                            {application.status}
+                          </span>
+                        </div>
 
-        <span>
-          📅{" "}
-          {new Date(
-            application.applicationDate
-          ).toLocaleDateString()}
-        </span>
-      </div>
-    </div>
+                        <p className="mt-1 font-semibold text-slate-700">
+                          {application.company}
+                        </p>
 
-    <div className="flex gap-2">
-      {application.jobUrl && (
-        <a
-          href={application.jobUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-        >
-          View Job
-        </a>
-      )}
+                        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-500">
+                          <span>
+                            📍{" "}
+                            {application.location ||
+                              "Location not specified"}
+                          </span>
 
-      <button
-        onClick={() => setEditingId(application._id)}
-        className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-      >
-        Edit
-      </button>
+                          <span>
+                            📅{" "}
+                            {new Date(
+                              application.applicationDate
+                            ).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
 
-      <button
-        onClick={() => handleDelete(application._id)}
-        className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
-      >
-        Delete
-      </button>
-    </div>
-  </div>
+                      <div className="flex flex-wrap gap-2">
+                        {application.jobUrl && (
+                          <a
+                            href={application.jobUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
+                          >
+                            View Job
+                          </a>
+                        )}
 
-  {(application.recruiterName ||
-    application.recruiterEmail ||
-    application.notes) && (
-    <div className="grid gap-4 border-t pt-4 md:grid-cols-2">
-      {(application.recruiterName ||
-        application.recruiterEmail) && (
-        <div>
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-            Recruiter
-          </p>
+                        <button
+                          onClick={() =>
+                            setEditingId(application._id)
+                          }
+                          className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50"
+                        >
+                          Edit
+                        </button>
 
-          {application.recruiterName && (
-            <p className="text-sm text-gray-700">
-              {application.recruiterName}
-            </p>
+                        <button
+                          onClick={() =>
+                            handleDelete(application._id)
+                          }
+                          className="rounded-xl bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-rose-700"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+
+                    {(application.recruiterName ||
+                      application.recruiterEmail ||
+                      application.notes) && (
+                      <div className="grid gap-5 border-t border-slate-100 pt-5 md:grid-cols-2">
+                        {(application.recruiterName ||
+                          application.recruiterEmail) && (
+                          <div>
+                            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                              Recruiter
+                            </p>
+
+                            {application.recruiterName && (
+                              <p className="text-sm font-medium text-slate-700">
+                                {application.recruiterName}
+                              </p>
+                            )}
+
+                            {application.recruiterEmail && (
+                              <a
+                                href={`mailto:${application.recruiterEmail}`}
+                                className="text-sm text-blue-600 transition hover:text-blue-700 hover:underline"
+                              >
+                                {application.recruiterEmail}
+                              </a>
+                            )}
+                          </div>
+                        )}
+
+                        {application.notes && (
+                          <div>
+                            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                              Notes
+                            </p>
+
+                            <p className="whitespace-pre-wrap text-sm leading-6 text-slate-600">
+                              {application.notes}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))
           )}
+        </div>
+      </section>
+    </main>
 
-          {application.recruiterEmail && (
-            <a
-              href={`mailto:${application.recruiterEmail}`}
-              className="text-sm text-blue-600 hover:underline"
+    {/* Add Application Modal */}
+    {showAddForm && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm"
+        onClick={() => setShowAddForm(false)}
+      >
+        <div
+          className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-blue-600">
+                New opportunity
+              </p>
+
+              <h2 className="text-xl font-bold text-slate-900">
+                Add Application
+              </h2>
+
+              <p className="mt-1 text-sm text-slate-500">
+                Add a new job application to your tracker.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowAddForm(false)}
+              className="rounded-xl px-3 py-2 text-2xl leading-none text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+              aria-label="Close"
             >
-              {application.recruiterEmail}
-            </a>
-          )}
-        </div>
-      )}
-
-      {application.notes && (
-        <div>
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-            Notes
-          </p>
-
-          <p className="whitespace-pre-wrap text-sm text-gray-600">
-            {application.notes}
-          </p>
-        </div>
-      )}
-    </div>
-  )}
-</div>
-                  )}
-                </div>
-              ))
-            )}
+              ×
+            </button>
           </div>
-        </section>
-      </main>
-      {showAddForm && (
-  <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-    onClick={() => setShowAddForm(false)}
-  >
-    <div
-      className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-6 shadow-xl"
-      onClick={(event) => event.stopPropagation()}
-    >
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900">
-            Add Application
-          </h2>
 
-          <p className="mt-1 text-sm text-gray-500">
-            Add a new job application to your tracker.
-          </p>
+          <ApplicationForm
+            onApplicationCreated={(newApplication) => {
+              handleApplicationCreated(newApplication);
+              setShowAddForm(false);
+            }}
+          />
         </div>
-
-        <button
-          onClick={() => setShowAddForm(false)}
-          className="rounded-lg px-3 py-2 text-xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
-          aria-label="Close"
-        >
-          ×
-        </button>
       </div>
-
-      <ApplicationForm
-        onApplicationCreated={(newApplication) => {
-          handleApplicationCreated(newApplication);
-          setShowAddForm(false);
-        }}
-      />
-    </div>
+    )}
   </div>
-)}{showAddForm && (
-  <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-    onClick={() => setShowAddForm(false)}
-  >
-    <div
-      className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-6 shadow-xl"
-      onClick={(event) => event.stopPropagation()}
-    >
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900">
-            Add Application
-          </h2>
-
-          <p className="mt-1 text-sm text-gray-500">
-            Add a new job application to your tracker.
-          </p>
-        </div>
-
-        <button
-          onClick={() => setShowAddForm(false)}
-          className="rounded-lg px-3 py-2 text-xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
-          aria-label="Close"
-        >
-          ×
-        </button>
-      </div>
-
-      <ApplicationForm
-        onApplicationCreated={(newApplication) => {
-          handleApplicationCreated(newApplication);
-          setShowAddForm(false);
-        }}
-      />
-    </div>
-  </div>
-)}
-    </div>
-  );
+);
 }
 
 export default Dashboard;
