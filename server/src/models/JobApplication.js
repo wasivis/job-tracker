@@ -35,6 +35,16 @@ const jobApplicationSchema = new mongoose.Schema(
       default: Date.now,
     },
 
+    followUpDate: {
+      type: Date,
+      default: null,
+    },
+
+    followUpCompleted: {
+      type: Boolean,
+      default: false,
+    },
+
     jobUrl: {
       type: String,
       trim: true,

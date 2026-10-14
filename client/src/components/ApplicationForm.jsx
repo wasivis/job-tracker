@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { apiRequest } from "../api/api";
 
@@ -11,6 +12,8 @@ const initialFormData = {
   recruiterEmail: "",
   notes: "",
   status: "Saved",
+  followUpDate: "",
+  followUpCompleted: false,
 };
 
 function ApplicationForm({ onApplicationCreated }) {
@@ -36,7 +39,11 @@ function ApplicationForm({ onApplicationCreated }) {
         "/api/applications",
         {
           method: "POST",
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            ...formData,
+            followUpDate: formData.followUpDate || null,
+            followUpCompleted: false,
+          }),
         }
       );
 
@@ -171,6 +178,24 @@ function ApplicationForm({ onApplicationCreated }) {
               <option value="Rejected">Rejected</option>
               <option value="Hired">Hired</option>
             </select>
+          </div>
+
+          <div>
+            <label className={labelClasses}>
+              Follow-up Date
+            </label>
+
+            <input
+              type="date"
+              name="followUpDate"
+              value={formData.followUpDate}
+              onChange={handleChange}
+              className={inputClasses}
+            />
+
+            <p className="mt-1.5 text-xs text-gray-500">
+              Optional. Set a date to remind yourself to follow up.
+            </p>
           </div>
         </div>
 

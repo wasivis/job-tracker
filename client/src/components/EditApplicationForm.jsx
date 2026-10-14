@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { apiRequest } from "../api/api";
 
@@ -18,16 +19,27 @@ function EditApplicationForm({
     recruiterEmail: application.recruiterEmail || "",
     notes: application.notes || "",
     status: application.status || "Saved",
+    followUpDate: application.followUpDate
+      ? application.followUpDate.split("T")[0]
+      : "",
+    followUpCompleted: application.followUpCompleted || false,
   });
 
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
+    const { name, value } = event.target;
+
+    setFormData((currentData) => ({
+      ...currentData,
+      [name]: value,
+
+      // A new follow-up date means the reminder is active again.
+      ...(name === "followUpDate"
+        ? { followUpCompleted: false }
+        : {}),
+    }));
   };
 
   const handleSubmit = async (event) => {
@@ -41,7 +53,10 @@ function EditApplicationForm({
         `/api/applications/${application._id}`,
         {
           method: "PUT",
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            ...formData,
+            followUpDate: formData.followUpDate || null,
+          }),
         }
       );
 
@@ -80,11 +95,11 @@ function EditApplicationForm({
       <div className="space-y-6">
         <div className="grid gap-5 md:grid-cols-2">
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="edit-company">
               Company *
             </label>
-
             <input
+              id="edit-company"
               type="text"
               name="company"
               value={formData.company}
@@ -95,11 +110,11 @@ function EditApplicationForm({
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="edit-jobTitle">
               Job Title *
             </label>
-
             <input
+              id="edit-jobTitle"
               type="text"
               name="jobTitle"
               value={formData.jobTitle}
@@ -110,11 +125,11 @@ function EditApplicationForm({
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="edit-location">
               Location
             </label>
-
             <input
+              id="edit-location"
               type="text"
               name="location"
               value={formData.location}
@@ -124,11 +139,11 @@ function EditApplicationForm({
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="edit-applicationDate">
               Application Date
             </label>
-
             <input
+              id="edit-applicationDate"
               type="date"
               name="applicationDate"
               value={formData.applicationDate}
@@ -138,11 +153,11 @@ function EditApplicationForm({
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="edit-jobUrl">
               Job URL
             </label>
-
             <input
+              id="edit-jobUrl"
               type="url"
               name="jobUrl"
               value={formData.jobUrl}
@@ -152,11 +167,11 @@ function EditApplicationForm({
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="edit-status">
               Status
             </label>
-
             <select
+              id="edit-status"
               name="status"
               value={formData.status}
               onChange={handleChange}
@@ -173,6 +188,50 @@ function EditApplicationForm({
           </div>
         </div>
 
+        {/* Follow-up reminder */}
+        <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4">
+          <h4 className="text-sm font-semibold text-gray-900">
+            Follow-up Reminder
+          </h4>
+
+          <p className="mt-1 mb-4 text-sm text-gray-500">
+            Set a date to remind yourself to contact the employer.
+            Changing the date reactivates a completed reminder.
+          </p>
+
+          <label
+            className={labelClasses}
+            htmlFor="edit-followUpDate"
+          >
+            Follow-up date
+          </label>
+
+          <input
+            id="edit-followUpDate"
+            type="date"
+            name="followUpDate"
+            value={formData.followUpDate}
+            onChange={handleChange}
+            className={inputClasses}
+          />
+
+          <p className="mt-2 text-xs text-gray-500">
+            Leave the date empty to remove the reminder.
+          </p>
+
+          {application.followUpCompleted &&
+            formData.followUpDate ===
+              (application.followUpDate
+                ? application.followUpDate.split("T")[0]
+                : "") && (
+              <p className="mt-2 text-xs font-medium text-emerald-700">
+                This reminder is completed. Choose a new date to
+                reactivate it.
+              </p>
+            )}
+        </div>
+
+        {/* Recruiter information */}
         <div className="border-t pt-6">
           <h4 className="mb-4 text-sm font-semibold text-gray-900">
             Recruiter Information
@@ -180,11 +239,14 @@ function EditApplicationForm({
 
           <div className="grid gap-5 md:grid-cols-2">
             <div>
-              <label className={labelClasses}>
+              <label
+                className={labelClasses}
+                htmlFor="edit-recruiterName"
+              >
                 Recruiter Name
               </label>
-
               <input
+                id="edit-recruiterName"
                 type="text"
                 name="recruiterName"
                 value={formData.recruiterName}
@@ -194,11 +256,14 @@ function EditApplicationForm({
             </div>
 
             <div>
-              <label className={labelClasses}>
+              <label
+                className={labelClasses}
+                htmlFor="edit-recruiterEmail"
+              >
                 Recruiter Email
               </label>
-
               <input
+                id="edit-recruiterEmail"
                 type="email"
                 name="recruiterEmail"
                 value={formData.recruiterEmail}
@@ -210,11 +275,11 @@ function EditApplicationForm({
         </div>
 
         <div>
-          <label className={labelClasses}>
+          <label className={labelClasses} htmlFor="edit-notes">
             Notes
           </label>
-
           <textarea
+            id="edit-notes"
             name="notes"
             value={formData.notes}
             onChange={handleChange}
