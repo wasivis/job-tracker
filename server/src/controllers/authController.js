@@ -1,7 +1,19 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Stripe = require("stripe");
 const User = require("../models/User");
 const JobApplication = require("../models/JobApplication");
+
+const toPublicUser = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  plan: user.plan || "free",
+  subscriptionStatus: user.stripeSubscriptionStatus,
+  currentPeriodEnd: user.stripeCurrentPeriodEnd,
+  cancelAtPeriodEnd: user.stripeCancelAtPeriodEnd,
+  hasBillingAccount: Boolean(user.stripeCustomerId),
+});
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -24,11 +36,7 @@ const register = async (req, res) => {
 
   res.status(201).json({
     message: "User registered successfully",
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-    },
+    user: toPublicUser(user),
   });
 };
 
@@ -67,28 +75,40 @@ const login = async (req, res) => {
   res.json({
     message: "Login successful",
     token,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-    },
+    user: toPublicUser(user),
   });
 };
 
 const deleteAccount = async (req, res) => {
   const userId = req.user.userId;
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(404).json({
+      message: "User not found",
+    });
+  }
+
+  if (
+    user.stripeSubscriptionId &&
+    user.stripeSubscriptionStatus !== "canceled" &&
+    user.stripeSubscriptionStatus !== "incomplete_expired"
+  ) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error(
+        "Cannot delete an account with a Stripe subscription until Stripe is configured."
+      );
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    await stripe.subscriptions.cancel(user.stripeSubscriptionId);
+  }
 
   await JobApplication.deleteMany({
     user: userId,
   });
 
-  const deletedUser = await User.findByIdAndDelete(userId);
-
-  if (!deletedUser) {
-    return res.status(404).json({
-      message: "User not found",
-    });
-  }
+  await User.findByIdAndDelete(userId);
 
   res.json({
     message: "Account deleted successfully",
@@ -107,11 +127,7 @@ const getCurrentUser = async (req, res) => {
   }
 
   res.json({
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-    },
+    user: toPublicUser(user),
   });
 };
 

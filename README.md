@@ -19,8 +19,10 @@ A full-stack web application for managing and tracking job applications througho
 * Search applications
 * Filter applications by status
 * Sort applications
+* Follow-up reminders
 * Dashboard metrics
 * Recruiter information
+* Multiple interview rounds per application, including dates, interviewers, notes, and outcomes
 * Job posting URLs
 * Notes for each application
 * Account settings
@@ -90,13 +92,17 @@ npm install
 
 ### Environment Variables
 
-Create `server/.env`:
+Create `server/.env` (see [`server/.env.example`](./server/.env.example)
+for the complete list):
 
 ```env
 PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 CLIENT_URL=http://localhost:5173
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PREMIUM_PRICE_ID=price_...
 ```
 
 Create `client/.env`:
@@ -150,6 +156,14 @@ PUT    /api/applications/:id
 DELETE /api/applications/:id
 ```
 
+### Billing
+
+```text
+POST /api/billing/checkout-session
+POST /api/billing/portal-session
+POST /api/billing/webhook
+```
+
 ## Security
 
 * Passwords are hashed with bcrypt
@@ -159,11 +173,40 @@ DELETE /api/applications/:id
 * Environment variables are excluded from Git
 * Production CORS is restricted to the frontend origin
 
+## Stripe Billing and Follow-up Reminders
+
+New accounts start on the `free` plan. The server enforces the plan when a
+follow-up reminder is created or changed; the client only uses the plan value
+to explain and disable the corresponding controls. Existing reminders remain
+visible to free-plan users.
+
+Premium is a USD $5/month subscription through Stripe Checkout. To configure
+Stripe in test mode:
+
+1. In the Stripe Dashboard, create a recurring product price for Premium at
+   `$5 USD` per month and copy its `price_...` ID into
+   `STRIPE_PREMIUM_PRICE_ID`.
+2. Put a **rotated** test secret key in `STRIPE_SECRET_KEY`. Keep Stripe keys
+   server-side; never add them to client environment variables or source
+   control. This uses Stripe-hosted Checkout, so the publishable key is not
+   needed in the frontend.
+3. For local webhook testing, run
+   `stripe listen --events checkout.session.completed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:5000/api/billing/webhook`
+   and set the CLI-provided signing secret as `STRIPE_WEBHOOK_SECRET`.
+4. Enable the Stripe customer portal in the Dashboard's test-mode Billing
+   settings. Premium members can use it to manage or cancel their subscription.
+5. Use Stripe test card `4242 4242 4242 4242`, any future expiry, and any CVC
+   to test Checkout. Never use real card details in test mode.
+
+For deployment, configure the same environment variables with live-mode Stripe
+credentials and register the deployed `/api/billing/webhook` URL in Stripe.
+Webhook signatures are verified before any subscription can change a user's
+plan. Account deletion cancels an associated Stripe subscription first.
+
 ## Future Improvements
 
 Possible future features include:
 
-* Follow-up reminders
 * Application analytics and charts
 * Resume storage
 * Email notifications

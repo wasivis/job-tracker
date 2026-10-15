@@ -1,4 +1,7 @@
 const authRoutes = require("./routes/authRoutes");
+const billingRoutes = require("./routes/billingRoutes");
+const { handleStripeWebhook } = require("./controllers/billingController");
+const asyncHandler = require("./utils/asyncHandler");
 const errorHandler = require("./middleware/errorMiddleware");
 const express = require("express");
 const cors = require("cors");
@@ -19,6 +22,13 @@ app.use(
     origin: process.env.CLIENT_URL,
   })
 );
+
+app.post(
+  "/api/billing/webhook",
+  express.raw({ type: "application/json" }),
+  asyncHandler(handleStripeWebhook)
+);
+
 app.use(express.json());
 
 // Routes
@@ -30,6 +40,7 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/applications", applicationRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/billing", billingRoutes);
 
 app.use(errorHandler);
 

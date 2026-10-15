@@ -1,5 +1,42 @@
 const mongoose = require("mongoose");
 
+const interviewRoundSchema = new mongoose.Schema({
+  roundName: {
+    type: String,
+    trim: true,
+    maxlength: [100, "Interview round name cannot exceed 100 characters"],
+  },
+  interviewDate: {
+    type: Date,
+    required: [true, "Interview date is required"],
+  },
+  interviewer: {
+    type: String,
+    trim: true,
+    maxlength: [100, "Interviewer name cannot exceed 100 characters"],
+  },
+  notes: {
+    type: String,
+    trim: true,
+    maxlength: [2000, "Interview notes cannot exceed 2000 characters"],
+  },
+  outcome: {
+    type: String,
+    enum: {
+      values: [
+        "Scheduled",
+        "Awaiting feedback",
+        "Passed",
+        "Not selected",
+        "Completed",
+        "Cancelled",
+      ],
+      message: "Invalid interview outcome",
+    },
+    default: "Scheduled",
+  },
+});
+
 const jobApplicationSchema = new mongoose.Schema(
   {
     user: {
@@ -43,6 +80,11 @@ const jobApplicationSchema = new mongoose.Schema(
     followUpCompleted: {
       type: Boolean,
       default: false,
+    },
+
+    interviews: {
+      type: [interviewRoundSchema],
+      default: [],
     },
 
     jobUrl: {

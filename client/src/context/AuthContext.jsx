@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useCallback,
   useState,
 } from "react";
 
@@ -15,6 +16,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.getItem("token")
   );
   const [loading, setLoading] = useState(true);
+
+  const updateUser = useCallback((userData) => {
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+  }, []);
 
   useEffect(() => {
     const verifySession = async () => {
@@ -73,6 +79,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         logout,
+        updateUser,
       }}
     >
       {children}

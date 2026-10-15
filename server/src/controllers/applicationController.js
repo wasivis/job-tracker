@@ -42,6 +42,7 @@ const createApplication = async (req, res) => {
     status,
     followUpDate,
     followUpCompleted,
+    interviews,
   } = req.body;
 
   const application = await JobApplication.create({
@@ -56,6 +57,7 @@ const createApplication = async (req, res) => {
     status,
     followUpDate,
     followUpCompleted,
+    interviews,
     user: req.user.userId,
   });
 
@@ -76,6 +78,7 @@ const updateApplication = async (req, res) => {
     status,
     followUpDate,
     followUpCompleted,
+    interviews,
   } = req.body;
 
   const application = await JobApplication.findOne({
@@ -131,6 +134,10 @@ const updateApplication = async (req, res) => {
 
   if (followUpCompleted !== undefined) {
     application.followUpCompleted = followUpCompleted;
+  }
+
+  if (interviews !== undefined) {
+    application.interviews = interviews;
   }
 
   await application.save();

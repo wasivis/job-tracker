@@ -1,11 +1,13 @@
 
 import { useState } from "react";
 import { apiRequest } from "../api/api";
+import PremiumNotice from "./dashboard/PremiumNotice";
 
 function EditApplicationForm({
   application,
   onApplicationUpdated,
   onCancel,
+  canUseFollowUps = false,
 }) {
   const [formData, setFormData] = useState({
     company: application.company || "",
@@ -55,7 +57,12 @@ function EditApplicationForm({
           method: "PUT",
           body: JSON.stringify({
             ...formData,
-            followUpDate: formData.followUpDate || null,
+            ...(canUseFollowUps
+              ? { followUpDate: formData.followUpDate || null }
+              : {
+                  followUpDate: undefined,
+                  followUpCompleted: undefined,
+                }),
           }),
         }
       );
@@ -69,19 +76,19 @@ function EditApplicationForm({
   };
 
   const inputClasses =
-    "w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+    "w-full rounded-xl border border-[#dfe6dd] bg-white px-4 py-3 text-sm text-[#34483b] outline-none transition placeholder:text-[#9aa69c] focus:border-[#6f9a77] focus:ring-4 focus:ring-[#eaf2e8]";
 
   const labelClasses =
-    "mb-1.5 block text-sm font-medium text-gray-700";
+    "mb-1.5 block text-sm font-semibold text-[#52665a]";
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-6">
-        <h3 className="text-xl font-semibold text-gray-900">
+        <h3 className="text-xl font-bold tracking-tight text-[#20392e]">
           Edit Application
         </h3>
 
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-[#7b8a7f]">
           Update the details for this application.
         </p>
       </div>
@@ -189,51 +196,51 @@ function EditApplicationForm({
         </div>
 
         {/* Follow-up reminder */}
-        <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4">
-          <h4 className="text-sm font-semibold text-gray-900">
-            Follow-up Reminder
-          </h4>
-
-          <p className="mt-1 mb-4 text-sm text-gray-500">
-            Set a date to remind yourself to contact the employer.
-            Changing the date reactivates a completed reminder.
-          </p>
-
-          <label
-            className={labelClasses}
-            htmlFor="edit-followUpDate"
-          >
-            Follow-up date
-          </label>
-
-          <input
-            id="edit-followUpDate"
-            type="date"
-            name="followUpDate"
-            value={formData.followUpDate}
-            onChange={handleChange}
-            className={inputClasses}
-          />
-
-          <p className="mt-2 text-xs text-gray-500">
-            Leave the date empty to remove the reminder.
-          </p>
-
-          {application.followUpCompleted &&
-            formData.followUpDate ===
-              (application.followUpDate
-                ? application.followUpDate.split("T")[0]
-                : "") && (
-              <p className="mt-2 text-xs font-medium text-emerald-700">
-                This reminder is completed. Choose a new date to
-                reactivate it.
-              </p>
-            )}
-        </div>
+        {canUseFollowUps ? (
+          <div className="rounded-2xl border border-[#dce8d9] bg-[#f5f8f2] p-4">
+            <h4 className="text-sm font-bold text-[#35483b]">
+              Follow-up Reminder
+            </h4>
+            <p className="mt-1 mb-4 text-sm text-[#7b8a7f]">
+              Set a date to remind yourself to contact the employer.
+              Changing the date reactivates a completed reminder.
+            </p>
+            <label className={labelClasses} htmlFor="edit-followUpDate">
+              Follow-up date
+            </label>
+            <input
+              id="edit-followUpDate"
+              type="date"
+              name="followUpDate"
+              value={formData.followUpDate}
+              onChange={handleChange}
+              className={inputClasses}
+            />
+            <p className="mt-2 text-xs text-[#87958b]">
+              Leave the date empty to remove the reminder.
+            </p>
+            {application.followUpCompleted &&
+              formData.followUpDate ===
+                (application.followUpDate
+                  ? application.followUpDate.split("T")[0]
+                  : "") && (
+                <p className="mt-2 text-xs font-semibold text-[#42724f]">
+                  This reminder is completed. Choose a new date to reactivate
+                  it.
+                </p>
+              )}
+          </div>
+        ) : (
+          <PremiumNotice>
+            {application.followUpDate
+              ? "Your existing reminder stays visible on your application, but only Premium members can change it."
+              : "Upgrade to set dates and stay on top of employer follow-ups."}
+          </PremiumNotice>
+        )}
 
         {/* Recruiter information */}
         <div className="border-t pt-6">
-          <h4 className="mb-4 text-sm font-semibold text-gray-900">
+          <h4 className="mb-4 text-sm font-bold text-[#35483b]">
             Recruiter Information
           </h4>
 
@@ -293,7 +300,7 @@ function EditApplicationForm({
             type="button"
             onClick={onCancel}
             disabled={submitting}
-            className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl border border-[#dfe6dd] px-5 py-3 text-sm font-semibold text-[#52665a] transition hover:bg-[#f6f8f4] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Cancel
           </button>
@@ -301,7 +308,7 @@ function EditApplicationForm({
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-[#285a43] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1e4935] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitting ? "Saving..." : "Save Changes"}
           </button>

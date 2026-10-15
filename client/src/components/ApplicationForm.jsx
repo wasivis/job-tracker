@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { apiRequest } from "../api/api";
+import PremiumNotice from "./dashboard/PremiumNotice";
 
 const initialFormData = {
   company: "",
@@ -13,10 +14,9 @@ const initialFormData = {
   notes: "",
   status: "Saved",
   followUpDate: "",
-  followUpCompleted: false,
 };
 
-function ApplicationForm({ onApplicationCreated }) {
+function ApplicationForm({ onApplicationCreated, canUseFollowUps = false }) {
   const [formData, setFormData] = useState(initialFormData);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -35,14 +35,19 @@ function ApplicationForm({ onApplicationCreated }) {
     setSubmitting(true);
 
     try {
+      const { followUpDate, ...applicationData } = formData;
       const newApplication = await apiRequest(
         "/api/applications",
         {
           method: "POST",
           body: JSON.stringify({
-            ...formData,
-            followUpDate: formData.followUpDate || null,
-            followUpCompleted: false,
+            ...applicationData,
+            ...(canUseFollowUps
+              ? {
+                  followUpDate: followUpDate || null,
+                  followUpCompleted: false,
+                }
+              : {}),
           }),
         }
       );
@@ -58,25 +63,25 @@ function ApplicationForm({ onApplicationCreated }) {
   };
 
   const inputClasses =
-    "w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+    "w-full rounded-xl border border-[#dfe6dd] bg-white px-4 py-3 text-sm text-[#34483b] outline-none transition placeholder:text-[#9aa69c] focus:border-[#6f9a77] focus:ring-4 focus:ring-[#eaf2e8]";
 
   const labelClasses =
-    "mb-1.5 block text-sm font-medium text-gray-700";
+    "mb-1.5 block text-sm font-semibold text-[#52665a]";
 
   return (
     <section>
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">
+        <h2 className="text-xl font-bold tracking-tight text-[#20392e]">
           Add Application
         </h2>
 
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-[#7b8a7f]">
           Keep track of a new job opportunity.
         </p>
       </div>
 
       {error && (
-        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
@@ -84,11 +89,12 @@ function ApplicationForm({ onApplicationCreated }) {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-5 md:grid-cols-2">
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="add-company">
               Company *
             </label>
 
             <input
+              id="add-company"
               type="text"
               name="company"
               value={formData.company}
@@ -100,11 +106,12 @@ function ApplicationForm({ onApplicationCreated }) {
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="add-jobTitle">
               Job Title *
             </label>
 
             <input
+              id="add-jobTitle"
               type="text"
               name="jobTitle"
               value={formData.jobTitle}
@@ -116,11 +123,12 @@ function ApplicationForm({ onApplicationCreated }) {
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="add-location">
               Location
             </label>
 
             <input
+              id="add-location"
               type="text"
               name="location"
               value={formData.location}
@@ -131,11 +139,12 @@ function ApplicationForm({ onApplicationCreated }) {
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="add-applicationDate">
               Application Date
             </label>
 
             <input
+              id="add-applicationDate"
               type="date"
               name="applicationDate"
               value={formData.applicationDate}
@@ -145,11 +154,12 @@ function ApplicationForm({ onApplicationCreated }) {
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="add-jobUrl">
               Job URL
             </label>
 
             <input
+              id="add-jobUrl"
               type="url"
               name="jobUrl"
               value={formData.jobUrl}
@@ -160,11 +170,12 @@ function ApplicationForm({ onApplicationCreated }) {
           </div>
 
           <div>
-            <label className={labelClasses}>
+            <label className={labelClasses} htmlFor="add-status">
               Status
             </label>
 
             <select
+              id="add-status"
               name="status"
               value={formData.status}
               onChange={handleChange}
@@ -180,37 +191,43 @@ function ApplicationForm({ onApplicationCreated }) {
             </select>
           </div>
 
-          <div>
-            <label className={labelClasses}>
-              Follow-up Date
-            </label>
-
-            <input
-              type="date"
-              name="followUpDate"
-              value={formData.followUpDate}
-              onChange={handleChange}
-              className={inputClasses}
-            />
-
-            <p className="mt-1.5 text-xs text-gray-500">
-              Optional. Set a date to remind yourself to follow up.
-            </p>
-          </div>
+          {canUseFollowUps ? (
+            <div>
+              <label className={labelClasses} htmlFor="add-followUpDate">
+                Follow-up Date
+              </label>
+              <input
+                id="add-followUpDate"
+                type="date"
+                name="followUpDate"
+                value={formData.followUpDate}
+                onChange={handleChange}
+                className={inputClasses}
+              />
+              <p className="mt-1.5 text-xs text-[#87958b]">
+                Optional. Set a date to remind yourself to follow up.
+              </p>
+            </div>
+          ) : (
+            <PremiumNotice compact>
+              Get a nudge when it’s time to reconnect.
+            </PremiumNotice>
+          )}
         </div>
 
         <div className="border-t pt-6">
-          <h3 className="mb-4 text-sm font-semibold text-gray-900">
+          <h3 className="mb-4 text-sm font-bold text-[#35483b]">
             Recruiter Information
           </h3>
 
           <div className="grid gap-5 md:grid-cols-2">
             <div>
-              <label className={labelClasses}>
+              <label className={labelClasses} htmlFor="add-recruiterName">
                 Recruiter Name
               </label>
 
               <input
+                id="add-recruiterName"
                 type="text"
                 name="recruiterName"
                 value={formData.recruiterName}
@@ -221,11 +238,12 @@ function ApplicationForm({ onApplicationCreated }) {
             </div>
 
             <div>
-              <label className={labelClasses}>
+              <label className={labelClasses} htmlFor="add-recruiterEmail">
                 Recruiter Email
               </label>
 
               <input
+                id="add-recruiterEmail"
                 type="email"
                 name="recruiterEmail"
                 value={formData.recruiterEmail}
@@ -238,11 +256,12 @@ function ApplicationForm({ onApplicationCreated }) {
         </div>
 
         <div>
-          <label className={labelClasses}>
+          <label className={labelClasses} htmlFor="add-notes">
             Notes
           </label>
 
           <textarea
+            id="add-notes"
             name="notes"
             value={formData.notes}
             onChange={handleChange}
@@ -256,7 +275,7 @@ function ApplicationForm({ onApplicationCreated }) {
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-[#285a43] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1e4935] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitting ? "Adding..." : "Add Application"}
           </button>

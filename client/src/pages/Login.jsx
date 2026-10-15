@@ -56,41 +56,44 @@ function Login() {
   };
 
   const inputClasses =
-    "w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+    "w-full rounded-xl border border-[#dfe6dd] bg-white px-4 py-3 text-sm text-[#34483b] outline-none transition placeholder:text-[#9aa69c] focus:border-[#6f9a77] focus:ring-4 focus:ring-[#eaf2e8]";
 
   return (
-  <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-100 px-4 py-10">
+  <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f6f7f3] px-4 py-10">
     {/* Background decoration */}
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl" />
-      <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-indigo-200/40 blur-3xl" />
+      <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#d4e6ce]/65 blur-3xl" />
+      <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[#d9e7dd]/70 blur-3xl" />
     </div>
 
     <div className="relative w-full max-w-md">
       {/* Branding */}
       <div className="mb-8 text-center">
-
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-          Job Application Tracker
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#15392f] text-[#d4ed9d] shadow-lg shadow-[#15392f]/15">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-6 w-6" aria-hidden="true">
+            <path d="M4 8.5h16v11H4zM9 8.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2.5M4 12h16M10 12v2h4v-2" />
+          </svg>
+        </div>
+        <h1 className="text-3xl font-bold tracking-tight text-[#18372d]">
+          Job Tracker
         </h1>
-
-        <p className="mt-2 text-slate-500">
-          Keep your job search organized.
+        <p className="mt-2 text-sm text-[#718176]">
+          Your job search, thoughtfully organized.
         </p>
       </div>
 
       {/* Login card */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-900/5">
+      <div className="rounded-[1.75rem] border border-[#e5e9e1] bg-white p-7 shadow-[0_24px_70px_rgba(29,53,39,0.09)] sm:p-9">
         <div className="mb-7">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-blue-600">
+          <p className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-[#588263]">
             Welcome back
           </p>
 
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h2 className="text-2xl font-bold tracking-tight text-[#20392e]">
             Log in to your account
           </h2>
 
-          <p className="mt-2 text-sm leading-6 text-slate-500">
+          <p className="mt-2 text-sm leading-6 text-[#7b8a7f]">
             View your applications and keep your job search moving forward.
           </p>
         </div>
@@ -103,7 +106,7 @@ function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">
+            <label className="mb-2 block text-sm font-semibold text-[#52665a]">
               Email
             </label>
 
@@ -113,13 +116,13 @@ function Login() {
               value={formData.email}
               onChange={handleChange}
               placeholder="you@example.com"
-              className={`${inputClasses} rounded-xl border-slate-200 px-4 py-3 transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100`}
+              className={inputClasses}
               required
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">
+            <label className="mb-2 block text-sm font-semibold text-[#52665a]">
               Password
             </label>
 
@@ -129,7 +132,7 @@ function Login() {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
-              className={`${inputClasses} rounded-xl border-slate-200 px-4 py-3 transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100`}
+              className={inputClasses}
               required
             />
           </div>
@@ -137,33 +140,33 @@ function Login() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/25 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl bg-[#285a43] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#285a43]/15 transition hover:bg-[#1e4935] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitting ? "Logging in..." : "Log In"}
           </button>
         </form>
 
         <div className="my-6 flex items-center gap-3">
-          <div className="h-px flex-1 bg-slate-200" />
-          <span className="text-xs font-medium text-slate-400">
+          <div className="h-px flex-1 bg-[#e7ebe4]" />
+          <span className="text-xs font-semibold tracking-widest text-[#a0aaa2]">
             OR
           </span>
-          <div className="h-px flex-1 bg-slate-200" />
+          <div className="h-px flex-1 bg-[#e7ebe4]" />
         </div>
 
-        <p className="text-center text-sm text-slate-500">
+        <p className="text-center text-sm text-[#7b8a7f]">
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="font-semibold text-blue-600 transition hover:text-blue-700 hover:underline"
+            className="font-semibold text-[#3f7652] transition hover:text-[#285a43] hover:underline"
           >
             Create one
           </Link>
         </p>
       </div>
 
-      <p className="mt-6 text-center text-xs text-slate-400">
-        Your applications, organized in one place.
+      <p className="mt-6 text-center text-xs text-[#96a198]">
+        Made for the next step in your career.
       </p>
     </div>
   </div>

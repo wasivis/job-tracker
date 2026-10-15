@@ -10,6 +10,7 @@ const {
 } = require("../controllers/applicationController");
 
 const protect = require("../middleware/authMiddleware");
+const requirePremiumForFollowUps = require("../middleware/requirePremiumForFollowUps");
 
 const router = express.Router();
 
@@ -18,8 +19,12 @@ router.use(protect);
 
 router.get("/", asyncHandler(getApplications));
 router.get("/:id", asyncHandler(getApplication));
-router.post("/", asyncHandler(createApplication));
-router.put("/:id", asyncHandler(updateApplication));
+router.post("/", requirePremiumForFollowUps, asyncHandler(createApplication));
+router.put(
+  "/:id",
+  requirePremiumForFollowUps,
+  asyncHandler(updateApplication)
+);
 router.delete("/:id", asyncHandler(deleteApplication));
 
 module.exports = router;
